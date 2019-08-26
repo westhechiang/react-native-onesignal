@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, ScrollView, ActivityIndicator, KeyboardAvoidingView, TextInput, Image, Button} from 'react-native';
+import {Platform, StyleSheet, Text, View, ScrollView, ActivityIndicator, KeyboardAvoidingView, TextInput, Image, Button, PushNotificationIOS} from 'react-native';
 import OneSignal from 'react-native-onesignal';
 
 const imageUri = 'https://cdn-images-1.medium.com/max/300/1*7xHdCFeYfD8zrIivMiQcCQ.png';
@@ -35,7 +35,8 @@ export default class App extends Component {
 
       OneSignal.setRequiresUserPrivacyConsent(requiresConsent);
 
-      OneSignal.init("ce8572ae-ff57-4e77-a265-5c91f00ecc4c", {kOSSettingsKeyAutoPrompt : true});
+      OneSignal.init("ce8572ae-ff57-4e77-a265-5c91f00ecc4c", {kOSSettingsKeyAutoPrompt : true });
+      OneSignal.inFocusDisplaying(0);
 
       this.oneSignalInAppMessagingExamples();
   }
@@ -71,6 +72,7 @@ export default class App extends Component {
   }
 
   async componentDidMount() {
+      console.log("Component Did Mount");
       var providedConsent = await OneSignal.userProvidedPrivacyConsent();
 
       this.setState({privacyButtonTitle : `Privacy Consent: ${providedConsent ? "Granted" : "Not Granted"}`, privacyGranted : providedConsent});
@@ -90,6 +92,8 @@ export default class App extends Component {
       OneSignal.addEventListener('ids', this.onIds);
       OneSignal.addEventListener('emailSubscription', this.onEmailRegistrationChange);
       OneSignal.addEventListener('inAppMessageClicked', this.onInAppMessageClicked);
+
+      PushNotificationIOS.addEventListener('localNotification', () => console.log("local notification tapped"));
   }
 
   componentWillUnmount() {
@@ -167,6 +171,16 @@ export default class App extends Component {
                                   OneSignal.sendTags({"test_property_1" : "test_value_1", "test_property_2" : "test_value_2"});
                               }}
                               title="Send Tags"
+                              color={this.state.buttonColor}
+                          />
+                      </View>
+                      <View style={styles.buttonContainer}>
+                          <Button style={styles.button}
+                              onPress={() => {
+                                console.log("Sending local notif");
+                                PushNotificationIOS.presentLocalNotification({alertBody:"Test Local Notification"});
+                              }}
+                              title="Send Local Notifs"
                               color={this.state.buttonColor}
                           />
                       </View>
