@@ -5,7 +5,12 @@
   "main": "src/index",
   "typings": "src/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "expo-module build",
+    "clean": "expo-module clean",
+    "test": "expo-module test",
+    "prepare": "expo-module prepare",
+    "prepublishOnly": "expo-module prepublishOnly",
+    "expo-module": "expo-module"
   },
   "dependencies": {
     "invariant": "^2.2.2"
@@ -30,5 +35,8 @@
     "url": "https://github.com/OneSignal/react-native-onesignal"
   },
   "author": "OneSignal <https://www.onesignal.com>, Geektime <http://www.geektime.co.il>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "expo-module-scripts": "^2.0.0"
+  }
 }
